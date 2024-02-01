@@ -1,11 +1,45 @@
 import { Link as RouterLink } from "react-router-dom";
 import { Button, Grid, Link, TextField, Typography } from "@mui/material";
 import { AuthLayout } from "../layout/AuthLayout";
+import { useForm } from "../../hooks";
+
+const formData = {
+  email: "steven@google.com",
+  password: "12345",
+  displayName: "Steven Tobares",
+};
+
+const formValidations = {
+  email: [(value) => value.includes("@"), "El correo debe tener un @"],
+  password: [
+    (value) => value.lengtth <= 6,
+    "El password debe de tener más de 6 letras",
+  ],
+  displayName: [(value) => value.lengtth <= 1, "El nombre es obligatorio"],
+};
 
 export const RegisterPage = () => {
+  const {
+    displayName,
+    email,
+    password,
+    onInputChange,
+    formState,
+    isFormValid,
+    emailValid,
+    passwordValid,
+    displayNameValid,
+  } = useForm(formData, formValidations);
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    console.log(formState);
+  };
+
   return (
     <AuthLayout title="Crear cuenta">
-      <form>
+      <h1>FormValid {isFormValid ? "Valido" : "Invalido"}</h1>
+      <form onSubmit={onSubmit}>
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
@@ -13,6 +47,11 @@ export const RegisterPage = () => {
               type="text"
               placeholder="Nombre completo"
               fullWidth
+              name="displayName"
+              value={displayName}
+              onChange={onInputChange}
+              error={!!displayNameValid}
+              helperText={displayNameValid}
             />
           </Grid>
 
@@ -22,6 +61,11 @@ export const RegisterPage = () => {
               type="email"
               placeholder="nombre@ejemplo.com"
               fullWidth
+              name="email"
+              value={email}
+              onChange={onInputChange}
+              error={!!emailValid}
+              helperText={emailValid}
             />
           </Grid>
 
@@ -31,12 +75,17 @@ export const RegisterPage = () => {
               type="password"
               placeholder="Contraseña"
               fullWidth
+              name="password"
+              value={password}
+              onChange={onInputChange}
+              error={!!passwordValid}
+              helperText={passwordValid}
             />
           </Grid>
 
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
             <Grid item xs={12}>
-              <Button variant="contained" fullWidth>
+              <Button variant="contained" fullWidth type="onSubmit">
                 Crear cuenta
               </Button>
             </Grid>
