@@ -8,15 +8,31 @@ import {
 import { TurnedInNot } from "@mui/icons-material";
 import { PropTypes } from "prop-types";
 import { useMemo } from "react";
+import { setActiveNote } from "../../store/journal";
+import { useDispatch } from "react-redux";
 
-export const SideBarItem = ({ title, body }) => {
+export const SideBarItem = ({ title = "", body, id, date, imageUrls = [] }) => {
+  const dispatch = useDispatch();
+
+  const onClickNote = () => {
+    dispatch(
+      setActiveNote({
+        title,
+        body,
+        id,
+        date,
+        imageUrls,
+      })
+    );
+  };
+
   const newTitle = useMemo(() => {
     return title.length > 17 ? title.substring(0, 17) + "..." : title;
   }, [title]);
 
   return (
     <ListItem disablePadding>
-      <ListItemButton>
+      <ListItemButton onClick={onClickNote}>
         <ListItemIcon>
           <TurnedInNot />
         </ListItemIcon>
@@ -32,4 +48,6 @@ export const SideBarItem = ({ title, body }) => {
 SideBarItem.propTypes = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
+  date: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
 };

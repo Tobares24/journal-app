@@ -30,7 +30,7 @@ export const SideBar = ({ drawerWidth }) => {
 
         <List>
           {notes.map((note) => (
-            <SideBarItem key={note.id} title={note.title} body={note.body} />
+            <SideBarItem key={note.id} {...note} />
           ))}
         </List>
       </Drawer>
